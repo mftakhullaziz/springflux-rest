@@ -1,5 +1,6 @@
 package com.example.reactiveSpringSQLService.service;
 
+import com.example.reactiveSpringSQLService.payload.Users;
 import com.example.reactiveSpringSQLService.payload.UsersRequest;
 import com.example.reactiveSpringSQLService.persistence.UsersTRec;
 import com.example.reactiveSpringSQLService.repositories.UsersRepository;
@@ -26,8 +27,13 @@ public class UsersServiceImpl implements UsersGateway{
     private final LocalDateTime dateTime = LocalDateTime.now();
 
     @Override
-    public Mono<UsersTRec> createUsers(UsersRequest request) {
-        return repository.save(constructBuild(request));
+    public Mono<Users> createUsers(UsersRequest request) {
+        Mono<UsersTRec> result = repository.save(constructBuild(request));
+        return result.map(
+                data -> Users.builder().userId(data.getUserId()).name(data.getName())
+                        .username(data.getUsername()).email(data.getEmail())
+                        .phoneNumber(data.getPhone()).dateIndex(data.getDateIndex()).build()
+        );
     }
 
     private UsersTRec constructBuild(UsersRequest request) {
@@ -37,13 +43,23 @@ public class UsersServiceImpl implements UsersGateway{
     }
 
     @Override
-    public Mono<UsersTRec> getUsers(Integer id) {
-        return repository.findById(id);
+    public Mono<Users> getUsers(Integer id) {
+        Mono<UsersTRec> result = repository.findById(id);
+        return result.map(
+                data -> Users.builder().userId(data.getUserId()).name(data.getName())
+                        .username(data.getUsername()).email(data.getEmail())
+                        .phoneNumber(data.getPhone()).dateIndex(data.getDateIndex()).build()
+        );
     }
 
     @Override
-    public Flux<UsersTRec> getUsers() {
-        return null;
+    public Flux<Users> getUsers() {
+        Flux<UsersTRec> result = repository.findAll();
+        return result.map(
+                data -> Users.builder().userId(data.getUserId()).name(data.getName())
+                        .username(data.getUsername()).email(data.getEmail())
+                        .phoneNumber(data.getPhone()).dateIndex(data.getDateIndex()).build()
+        );
     }
 
     @Override

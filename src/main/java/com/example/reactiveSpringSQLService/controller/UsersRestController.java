@@ -1,12 +1,16 @@
 package com.example.reactiveSpringSQLService.controller;
 
+import com.example.reactiveSpringSQLService.payload.ResponseDto;
+import com.example.reactiveSpringSQLService.payload.Users;
 import com.example.reactiveSpringSQLService.payload.UsersRequest;
-import com.example.reactiveSpringSQLService.persistence.UsersTRec;
 import com.example.reactiveSpringSQLService.service.UsersGateway;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "users")
@@ -18,17 +22,37 @@ public class UsersRestController {
         this.gateway = gateway;
     }
 
-    @PostMapping("/create")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> createUsers(@RequestBody UsersRequest request) {
-        Mono<UsersTRec> result = gateway.createUsers(request);
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
+    @GetMapping("/get/{id}")
+    public Mono<ResponseEntity<ResponseDto<Users>>> getUser(@PathVariable Integer id) {
+        Mono<Users> result = gateway.getUsers(id);
+        return result.map(
+                res -> new ResponseEntity<>(
+                        ResponseDto.success(res, RestConstant.ACCEPTED, HttpStatus.OK.value()),
+                        HttpStatus.OK)
+                ).defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/get/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<?> getUsers(@PathVariable Integer id) {
-        Mono<UsersTRec> result = gateway.getUsers(id);
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
+    @PostMapping("/create")
+    public Mono<ResponseEntity<ResponseDto<Users>>> createUser(@RequestBody UsersRequest request) {
+        Mono<Users> result = gateway.createUsers(request);
+        return result.map(
+                res -> new ResponseEntity<>(
+                        ResponseDto.success(res, RestConstant.CREATED, HttpStatus.CREATED.value()),
+                        HttpStatus.OK)
+                ).defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+
+    @GetMapping("/get")
+    public Mono<ResponseEntity<ResponseDto<List<Users>>>> getUserAll() {
+        Flux<Users> result = gateway.getUsers();
+        return result.collectList().map(
+               res -> new ResponseEntity<>(
+                       ResponseDto.success(res, RestConstant.ACCEPTED, HttpStatus.CREATED.value()),
+                       HttpStatus.OK)
+        ).defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+
+
+
 }
