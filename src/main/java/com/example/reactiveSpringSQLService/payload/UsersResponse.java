@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class ResponseDto<T> {
+public class UsersResponse<T> {
 
     private Boolean success;
     private T data;
@@ -13,7 +13,7 @@ public class ResponseDto<T> {
     private String message;
     private Integer statusCode;
 
-    private ResponseDto(Boolean success, T data, Boolean failed, String message, Integer statusCode) {
+    private UsersResponse(Boolean success, T data, Boolean failed, String message, Integer statusCode) {
         this.success = success;
         this.data = data;
         this.failed = failed;
@@ -21,8 +21,8 @@ public class ResponseDto<T> {
         this.statusCode = statusCode;
     }
 
-    public static <T> ResponseDto<T> success(T data, String message, Integer statusCode) {
-        return new ResponseDto<T>(true, data, false, message, statusCode);
+    public static <T> UsersResponse<T> success(T data, String message, Integer statusCode) {
+        return new UsersResponse<T>(true, data, false, message, statusCode);
     }
 
 }

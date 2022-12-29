@@ -5,7 +5,6 @@ import com.example.reactiveSpringSQLService.payload.UsersRequest;
 import com.example.reactiveSpringSQLService.persistence.UsersTRec;
 import com.example.reactiveSpringSQLService.repositories.UsersRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -69,6 +68,27 @@ public class UsersServiceImpl implements UsersGateway{
 
     @Override
     public Mono<UsersTRec> deleteUsers(Integer id) {
-        return null;
+        return repository.findById(id)
+                .flatMap(existingUser -> repository.delete(existingUser)
+                        .then(Mono.just(existingUser)));
+    }
+
+    @Override
+    public Mono<Users> updateUsers(Integer id, UsersRequest request) {
+        Mono<UsersTRec> result = repository.findById(id)
+                .flatMap(data -> {
+                    data.setName(request.getName());
+                    data.setUsername(request.getUsername());
+                    data.setPhone(request.getPhoneNumber());
+                    data.setEmail(request.getEmail());
+                    return repository.save(data);
+                });
+        return result.map(this::constructUpdate);
+    }
+
+    private Users constructUpdate(UsersTRec data) {
+        return Users.builder().userId(data.getUserId()).name(data.getName())
+                .username(data.getUsername()).email(data.getEmail())
+                .phoneNumber(data.getPhone()).dateIndex(data.getDateIndex()).build();
     }
 }

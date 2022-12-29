@@ -12,4 +12,5 @@ public interface UsersGateway {
     Flux<Users> getUsers();
     Flux<UsersTRec> getUsersByDateIndex(Integer startDate, Integer endDate);
     Mono<UsersTRec> deleteUsers(Integer id);
+    Mono<Users> updateUsers(Integer id, UsersRequest request);
 }

@@ -10,7 +10,7 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Builder
@@ -44,13 +44,13 @@ public class UsersTRec {
     private Integer dateIndex;
 
     @Column(value = "creation_at")
-    private Timestamp creationAt;
+    private LocalDateTime creationAt;
 
     @Column(value = "creation_by")
     private String creationBy;
 
     @Column(value = "last_updated_at")
-    private Timestamp lastUpdateAt;
+    private LocalDateTime lastUpdateAt;
 
     @Column(value = "last_updated_by")
     private String lastUpdatedBy;
