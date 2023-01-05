@@ -5,6 +5,7 @@ import com.example.reactiveSpringSQLService.payload.Users;
 import com.example.reactiveSpringSQLService.payload.UsersRequest;
 import com.example.reactiveSpringSQLService.persistence.UsersTRec;
 import com.example.reactiveSpringSQLService.service.UsersGateway;
+import io.swagger.annotations.Api;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "users")
+@Api(tags = "User Rest API")
 public class UsersRestController {
 
     private final UsersGateway gateway;
