@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "users")
-@Api(tags = "Users management")
+@Api(tags = "Users")
 public class UsersRestController {
 
     private final UsersGateway gateway;
