@@ -1,5 +1,6 @@
 package com.example.reactiveSpringSQLService.controller;
 
+import com.example.reactiveSpringSQLService.constant.RestConstant;
 import com.example.reactiveSpringSQLService.payload.UsersResponse;
 import com.example.reactiveSpringSQLService.payload.Users;
 import com.example.reactiveSpringSQLService.payload.UsersRequest;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "users")
-@Api(tags = "User Rest API")
+@Api(tags = "Users management")
 public class UsersRestController {
 
     private final UsersGateway gateway;
